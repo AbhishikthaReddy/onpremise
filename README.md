@@ -6,7 +6,6 @@
 - [Preparation](#preparation)
 - [Installation](#installation)
 - [First Login](#first-login)
-- [App Configuration](#app-configuration)
 - [Trouble Shooting](#trouble-shooting)
 
 ## Overview
@@ -17,6 +16,8 @@ These instructions are to allow developers and customers install 3Blades on an A
 - Docker images are pulled from AWS ECR registry.
 - All images communicate with each other using docker links.
 - All services and data stores run in separate containers.
+
+You could do all of this with docker-compose. As a matter of fact, the ansible script does use docker-compose to launch and link services. However, we chose to use ansible since it provides more customization options.
 
 ## Preparation
 
