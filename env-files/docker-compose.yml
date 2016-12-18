@@ -1,0 +1,121 @@
+version: '2'
+services:
+  celery:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    command: bash -c "sleep 15 && /bin/bash run_celery.sh"
+    env_file: env
+    volumes:
+      - /workspaces:/workspaces
+    links:
+      - db
+      - cache
+      - search
+      - broker
+  beat:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    command: bash -c "sleep 15 && /bin/bash run_celery_beat.sh"
+    env_file: env
+    volumes:
+      - /workspaces:/workspaces
+    links:
+      - db
+      - cache
+      - search
+      - broker
+  app:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    command: bash -c "sleep 15 && /bin/bash run.sh"
+    env_file: env
+    volumes:
+      - /workspaces:/workspaces
+    links:
+      - db
+      - cache
+      - search
+    ports:
+      - "8000:80"
+  db:
+    networks:
+      - threeblades
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes_from:
+      - container:postgresql-data:rw 
+  cache:
+    networks:
+      - threeblades
+    image: redis
+    ports:
+      - "6379:6379"
+  search:
+    networks:
+      - threeblades
+    image: elasticsearch:2.4
+    ports:
+      - "9200:9200"
+  broker:
+    networks:
+      - threeblades
+    image: rabbitmq
+  server:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/openresty:latest
+    command: -p '' -c nginx.conf -g 'daemon off;'
+    env_file: env
+    ports:
+      - "80:80"
+    links:
+      - app
+      - logspout
+      - cache
+      - notifications-server
+  logspout:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/logspout:latest
+    ports:
+      - "8888:80"    
+    environment:
+      - DEBUG=True
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  stats:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/docker-stats:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - db
+      - cache
+  notifications-server:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/notifications-server:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://cache:6379/0
+  init-data:
+    networks:
+      - threeblades
+    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    command: bash -c "sleep 30 && . ../env/bin/activate && python manage.py create_admin_user -u admin -f admin -e admin@admin.com -p admin"
+    env_file: env
+    links:
+      - server
+      - db
+      - search
+      - cache
+    
+
+networks:
+  threeblades:
