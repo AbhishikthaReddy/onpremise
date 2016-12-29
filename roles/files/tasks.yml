@@ -1,0 +1,16 @@
+- name: create a directory
+  file: path='{{ working-dir }}' state=directory
+
+- name: copy the docker-compose file to host
+  copy: dest='{{ working-dir }}'/docker-compose.yml  force=yes src=env-files/docker-compose.yml
+
+# Gather IP facts from ipify.org
+- name: get my public IP
+  ipify_facts:
+
+- set_fact: local_ip="{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+
+- debug: var=local_ip
+
+- name: Copy env-vars file
+  template: src=env-files/env.j2 dest='{{ working-dir }}'/env

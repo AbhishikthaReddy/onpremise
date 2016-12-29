@@ -1,2 +1,1 @@
-demo ansible_ssh_host=35.164.251.157 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=demo-full-stack-deployment.pem 
-local ansible_ssh_host=192.168.43.38 ansible_ssh_user=ubuntu
+hubserver ansible_ssh_host=35.163.102.186

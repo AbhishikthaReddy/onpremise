@@ -1,0 +1,56 @@
+- name: log into aws ecr
+  environment:
+    AWS_SECRET_ACCESS_KEY: '{{ aws_secret_access_key }}'
+    AWS_ACCESS_KEY_ID: '{{ aws_access_key_id }}'
+    AWS_DEFAULT_REGION: '{{ aws_default_region }}'
+  shell: eval $(aws ecr get-login)
+
+- name: pull the hubserver image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    state: present
+    force: "{{ force_pull_images }}"
+    timeout: 3600 
+- name: pull the openresty image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/openresty:latest
+    state: present
+    force: "{{ force_pull_images }}"
+- name: pull the notifications-server image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/notifications-server:latest
+    state: present
+    force: "{{ force_pull_images }}"
+- name: pull the logspout image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/logspout:latest
+    state: present
+    force: "{{ force_pull_images }}"
+- name: pull the docker-stats image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/docker-stats:latest
+    state: present
+    force: "{{ force_pull_images }}"
+
+- name: pull jupyterlab image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jupyterlab:latest
+    state: present
+    force: "{{ force_pull_images }}"
+
+- name: pull scipy-notebook image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/scipy-notebook:latest
+    state: present
+    force: "{{ force_pull_images }}"
+
+- name: pull jobs-py3 image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jobs-py3:latest
+    state: present
+    force: "{{ force_pull_images }}"
+- name: pull model-py3 image
+  docker_image:
+    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/model-py3:latest
+    state: present
+    force: "{{ force_pull_images }}"
