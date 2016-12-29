@@ -3,7 +3,7 @@ services:
   celery:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    image: 3blades/hubserver:latest
     command: bash -c "sleep 15 && /bin/bash run_celery.sh"
     env_file: env
     volumes:
@@ -16,7 +16,7 @@ services:
   beat:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    image: 3blades/hubserver:latest
     command: bash -c "sleep 15 && /bin/bash run_celery_beat.sh"
     env_file: env
     volumes:
@@ -29,7 +29,7 @@ services:
   app:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    image: 3blades/hubserver:latest
     command: bash -c "sleep 15 && /bin/bash run.sh"
     env_file: env
     volumes:
@@ -67,7 +67,7 @@ services:
   server:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/openresty:latest
+    image: 3blades/openresty:latest
     command: -p '' -c nginx.conf -g 'daemon off;'
     env_file: env
     ports:
@@ -80,7 +80,7 @@ services:
   logspout:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/logspout:latest
+    image: 3blades/logspout:latest
     ports:
       - "8888:80"    
     environment:
@@ -90,7 +90,7 @@ services:
   stats:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/docker-stats:latest
+    image: 3blades/docker-stats:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     links:
@@ -99,7 +99,7 @@ services:
   notifications-server:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/notifications-server:latest
+    image: 3blades/notifications-server:latest
     ports:
       - "3000:3000"
     environment:
@@ -107,7 +107,7 @@ services:
   init-data:
     networks:
       - threeblades
-    image: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    image: 3blades/hubserver:latest
     command: bash -c "sleep 30 && . ../env/bin/activate && python manage.py create_admin_user -u admin -f admin -e admin@admin.com -p admin"
     env_file: env
     links:

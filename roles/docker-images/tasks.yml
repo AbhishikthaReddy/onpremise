@@ -7,50 +7,50 @@
 
 - name: pull the hubserver image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+    name: 3blades/hubserver:latest
     state: present
     force: "{{ force_pull_images }}"
     timeout: 3600 
 - name: pull the openresty image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/openresty:latest
+    name: 3blades/openresty:latest
     state: present
     force: "{{ force_pull_images }}"
 - name: pull the notifications-server image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/notifications-server:latest
+    name: 3blades/notifications-server:latest
     state: present
     force: "{{ force_pull_images }}"
 - name: pull the logspout image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/logspout:latest
+    name: 3blades/logspout:latest
     state: present
     force: "{{ force_pull_images }}"
 - name: pull the docker-stats image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/docker-stats:latest
+    name: 3blades/docker-stats:latest
     state: present
     force: "{{ force_pull_images }}"
 
 - name: pull jupyterlab image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jupyterlab:latest
+    name: 3blades/jupyterlab:latest
     state: present
     force: "{{ force_pull_images }}"
 
 - name: pull scipy-notebook image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/scipy-notebook:latest
+    name: 3blades/scipy-notebook:latest
     state: present
     force: "{{ force_pull_images }}"
 
 - name: pull jobs-py3 image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jobs-py3:latest
+    name: 3blades/jobs-py3:latest
     state: present
     force: "{{ force_pull_images }}"
 - name: pull model-py3 image
   docker_image:
-    name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/model-py3:latest
+    name: 3blades/model-py3:latest
     state: present
     force: "{{ force_pull_images }}"
