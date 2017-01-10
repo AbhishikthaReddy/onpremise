@@ -16,9 +16,15 @@
   hosts: all
   become: true
   roles:
-    - { role: files}
-# play 4
-- name: Configure files
+    - { role: artifacts}
+
+- name: launch the stack
+  hosts: all
+  become: true
+  roles:
+    - { role: create-stack}
+# play 5
+- name: init data
   hosts: all
   become: true
   roles:
