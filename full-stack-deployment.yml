@@ -41,9 +41,6 @@
 
     - name: install docker-compose
       command: pip install docker-compose --upgrade
-
-    - name: install awscli
-      pip: name=awscli 
         
     - name: create docker group
       command: groupadd docker
@@ -74,13 +71,6 @@
 
     - name: restart docker service
       command: systemctl restart docker
-
-    - name: log into aws ecr
-      environment:
-        AWS_SECRET_ACCESS_KEY: '{{ aws_secret_access_key }}'
-        AWS_ACCESS_KEY_ID: '{{ aws_access_key_id }}'
-        AWS_DEFAULT_REGION: '{{ aws_default_region }}'
-      shell: eval $(aws ecr get-login)
 
     - name: pull the hubserver image
       docker_image:
