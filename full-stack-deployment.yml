@@ -111,9 +111,9 @@
         state: present
         force: "{{ force_pull_images }}"
     
-    - name: pull jobs-py3 image
+    - name: pull job-py3 image
       docker_image:
-        name: 3blades/jobs-py3:latest
+        name: 3blades/job-py3:latest
         state: present
         force: "{{ force_pull_images }}"
     - name: pull model-py3 image
@@ -213,7 +213,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at)
-          VALUES ('jobs-py3', '3blades/jobs-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} python3 -c \"from {job.script:.{script_name_len}} import {job.method}; {job.method}()\"' , 'Python 3', '/resources', '/resources', 8000, now());"
+          VALUES ('jobs-py3', '3blades/job-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} python3 -c \"from {job.script:.{script_name_len}} import {job.method}; {job.method}()\"' , 'Python 3', '/resources', '/resources', 8000, now());"
          -h 3blades_db -U postgres
 
     - name: create scipy-notebook env-type
