@@ -84,51 +84,51 @@
 
     - name: pull the hubserver image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/hubserver:latest
+        name: 3blades/hubserver:latest
         state: present
         force: "{{ force_pull_images }}"
         timeout: 3600 
     - name: pull the openresty image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/openresty:latest
+        name: 3blades/openresty:latest
         state: present
         force: "{{ force_pull_images }}"
     - name: pull the notifications-server image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/notifications-server:latest
+        name: 3blades/notifications-server:latest
         state: present
         force: "{{ force_pull_images }}"
     - name: pull the logspout image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/logspout:latest
+        name: 3blades/logspout:latest
         state: present
         force: "{{ force_pull_images }}"
     - name: pull the docker-stats image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/docker-stats:latest
+        name: 3blades/docker-stats:latest
         state: present
         force: "{{ force_pull_images }}"
 
     - name: pull jupyterlab image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jupyterlab:latest
+        name: 3blades/jupyterlab:latest
         state: present
         force: "{{ force_pull_images }}"
 
     - name: pull scipy-notebook image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/scipy-notebook:latest
+        name: 3blades/scipy-notebook:latest
         state: present
         force: "{{ force_pull_images }}"
     
     - name: pull jobs-py3 image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/jobs-py3:latest
+        name: 3blades/jobs-py3:latest
         state: present
         force: "{{ force_pull_images }}"
     - name: pull model-py3 image
       docker_image:
-        name: 860100747351.dkr.ecr.us-east-1.amazonaws.com/model-py3:latest
+        name: 3blades/model-py3:latest
         state: present
         force: "{{ force_pull_images }}"
 
@@ -196,7 +196,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at)
-          VALUES ('JupyterLab', '860100747351.dkr.ecr.us-east-1.amazonaws.com/jupyterlab', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -port=8888 -resource=\"/home/work\" jupyter lab --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"', 'JupyterLab (beta)', '/home/work', '/home/work', 8888, now());"
+          VALUES ('JupyterLab', '3blades/jupyterlab', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -port=8888 -resource=\"/home/work\" jupyter lab --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"', 'JupyterLab (beta)', '/home/work', '/home/work', 8888, now());"
          -h 3blades_db -U postgres
     - name: create model-py3 env-type
       docker_container:
@@ -209,7 +209,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at)
-          VALUES ('model-py3', '860100747351.dkr.ecr.us-east-1.amazonaws.com/model-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -hubserver_secret_key="{{app_secret_key}}"', 'Python 3', '/resources', '/resources', 8000, now());"
+          VALUES ('model-py3', '3blades/model-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -hubserver_secret_key="{{app_secret_key}}"', 'Python 3', '/resources', '/resources', 8000, now());"
          -h 3blades_db -U postgres
     
     - name: create jobs-py3 env-type
@@ -223,7 +223,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at)
-          VALUES ('jobs-py3', '860100747351.dkr.ecr.us-east-1.amazonaws.com/jobs-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} python3 -c \"from {job.script:.{script_name_len}} import {job.method}; {job.method}()\"' , 'Python 3', '/resources', '/resources', 8000, now());"
+          VALUES ('jobs-py3', '3blades/jobs-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} python3 -c \"from {job.script:.{script_name_len}} import {job.method}; {job.method}()\"' , 'Python 3', '/resources', '/resources', 8000, now());"
          -h 3blades_db -U postgres
 
     - name: create scipy-notebook env-type
@@ -237,7 +237,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at)
-          VALUES ('scipy', '860100747351.dkr.ecr.us-east-1.amazonaws.com/scipy-notebook', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} -port=8888 -resource=\"/home/work\" jupyter notebook --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"' , 'Python Data Science Notebook with Jupyter', '/resources', '/resources', 8000, now());"
+          VALUES ('scipy', '3blades/scipy-notebook', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} -port=8888 -resource=\"/home/work\" jupyter notebook --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"' , 'Python Data Science Notebook with Jupyter', '/resources', '/resources', 8000, now());"
          -h 3blades_db -U postgres
 
     - name: create a resources item with 512 of memory
