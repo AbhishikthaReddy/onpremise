@@ -67,7 +67,7 @@ services:
   server:
     networks:
       - threeblades
-    image: 3blades/openresty:latest
+    image: 3blades/openresty:on-premise
     command: -p '' -c nginx.conf -g 'daemon off;'
     env_file: env
     ports:

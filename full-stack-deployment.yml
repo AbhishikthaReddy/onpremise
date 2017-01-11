@@ -78,9 +78,9 @@
         state: present
         force: "{{ force_pull_images }}"
         timeout: 3600 
-    - name: pull the openresty image
+    - name: pull the openresty image (the on-premise version)
       docker_image:
-        name: 3blades/openresty:latest
+        name: 3blades/openresty:on-premise
         state: present
         force: "{{ force_pull_images }}"
     - name: pull the notifications-server image
