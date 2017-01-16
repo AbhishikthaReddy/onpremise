@@ -217,7 +217,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
-          VALUES ('model-py3', '3blades/model-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -hubserver_secret_key="{{app_secret_key}}"', 'Python 3', '/resources', '/resources', 8000, now(), 'm');"
+          VALUES ('model-py3', '3blades/model-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{model.hashid}\" -hubserver_secret_key=\"{{app_secret_key}}\"', 'Python 3', '/resources', '/resources', 8000, now(), 'm');"
          -h 3blades_db -U postgres
     
     - name: create jobs-py3 env-type
@@ -245,7 +245,7 @@
         
         cleanup: yes
         command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
-          VALUES ('scipy', '3blades/scipy-notebook', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} -port=8888 -resource=\"/home/work\" jupyter notebook --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"' , 'Python Data Science Notebook with Jupyter', '/resources', '/resources', 8000, now(),'w');"
+          VALUES ('scipy', '3blades/scipy-notebook', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={workspace.hashid} -port=8888 -resource=\"/home/work\" jupyter notebook --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"' , 'Python Data Science Notebook with Jupyter', '/resources', '/resources', 8000, now(),'w');"
          -h 3blades_db -U postgres
 
     - name: create a resources item with 512 of memory
