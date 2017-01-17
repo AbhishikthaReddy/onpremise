@@ -29,4 +29,3 @@
   become: true
   roles:
     - { role: initdata}
-        
