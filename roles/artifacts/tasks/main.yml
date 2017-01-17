@@ -1,8 +1,8 @@
 - name: create a directory
-  file: path='{{ working-dir }}' state=directory
+  file: path='{{ working_dir }}' state=directory
 
 - name: copy the docker-compose file to host
-  copy: dest='{{ working-dir }}'/docker-compose.yml  force=yes src=docker-compose.yml
+  copy: dest='{{ working_dir }}/docker-compose.yml'  force=yes src=docker-compose.yml
 
 # Gather IP facts from ipify.org
 - name: get my public IP
@@ -13,4 +13,4 @@
 - debug: var=local_ip
 
 - name: Copy env-vars file
-  template: src=env.j2 dest='{{ working-dir }}'/env
+  template: src=env.j2 dest='{{ working_dir }}/env'

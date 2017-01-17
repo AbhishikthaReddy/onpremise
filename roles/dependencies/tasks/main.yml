@@ -5,7 +5,7 @@
 - setup: # aka gather_facts
 
 - name: install apt packages
-  apt: name={{ item }} update-cache=yes state=present
+  apt: name={{ item }} update-cache=yes state=present cache_valid_time=3600
   with_items: 
     - python-dev
     - python-setuptools    
@@ -36,17 +36,14 @@
 - name: install docker-compose
   pip: name=docker-compose
 
-- name: install awscli
-  pip: name=awscli 
-
 - name: Create a docker group
   group: 
       name=docker 
       state=present
 
-# Add user(s) to docker group
-- user: 
-    name=$USER
+- name: Add current user to docker group
+  user: 
+    name={{ lookup('env', 'USER') }} 
     group=docker 
     state=present 
   notify: 

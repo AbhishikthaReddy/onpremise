@@ -1,56 +1,69 @@
-- name: log into aws ecr
-  environment:
-    AWS_SECRET_ACCESS_KEY: '{{ aws_secret_access_key }}'
-    AWS_ACCESS_KEY_ID: '{{ aws_access_key_id }}'
-    AWS_DEFAULT_REGION: '{{ aws_default_region }}'
-  shell: eval $(aws ecr get-login)
-
 - name: pull the hubserver image
   docker_image:
     name: 3blades/hubserver:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
     timeout: 3600 
-- name: pull the openresty image
+- name: pull the openresty image (the on-premise version)
   docker_image:
-    name: 3blades/openresty:latest
+    name: 3blades/openresty:on-premise
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 - name: pull the notifications-server image
   docker_image:
     name: 3blades/notifications-server:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 - name: pull the logspout image
   docker_image:
     name: 3blades/logspout:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 - name: pull the docker-stats image
   docker_image:
     name: 3blades/docker-stats:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 
 - name: pull jupyterlab image
   docker_image:
     name: 3blades/jupyterlab:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 
 - name: pull scipy-notebook image
   docker_image:
     name: 3blades/scipy-notebook:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
 
-- name: pull jobs-py3 image
+- name: pull job-py3 image
   docker_image:
-    name: 3blades/jobs-py3:latest
+    name: 3blades/job-py3:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
+    
 - name: pull model-py3 image
   docker_image:
     name: 3blades/model-py3:latest
     state: present
-    force: "{{ force_pull_images }}"
+    force: "{{ pull_images_always }}"
+
+# pull the data-sources images
+- name: pull mongo image
+  docker_image:
+    name: mongo
+    state: present
+    
+- name: pull cassandra image
+  docker_image:
+    name: cassandra
+    state: present
+- name: pull mysql image
+  docker_image:
+    name: mysql
+    state: present
+- name: pull postgres image
+  docker_image:
+    name: postgres
+    state: present

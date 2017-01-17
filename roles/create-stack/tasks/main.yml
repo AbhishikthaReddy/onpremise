@@ -8,7 +8,7 @@
 
 # launch the full stack in background (-d)
 - name: launch the full-stack
-  command: docker-compose -f '{{ working-dir }}'/docker-compose.yml up -d
+  command: docker-compose -f '{{ working_dir }}'/docker-compose.yml up -d
 
 - name: "Wait for services to start"
   pause: seconds=25
