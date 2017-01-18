@@ -60,7 +60,7 @@ You could do all of this with docker-compose. As a matter of fact, the ansible s
 
 1. Edit the inventory file called `hosts` by changing your EC2 public IP address: 
     
-    `hubserver ansible_ssh_host=[public_ip_address] ansible_ssh_port=22
+    `hubserver ansible_ssh_host=[public_ip_address] ansible_ssh_port=22`
 
     > Change the ssh port if it is different in your case
 
@@ -89,6 +89,9 @@ Please, consider this:
 
 - `APP_SECRET_KEY` should be a securely generated random string.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME` and `SMTP_PASSWORD` values are used to authenticate to SMTP service. Them should be replaced with your respective SMTP configurations and are necessary to enable system notifications, including password reset emails.
+
+  > The `force_pull_images` argument is only useful if there is a new version of our images and we want to update them. In that case we have to run
+  > the ansible-plabook as before
 
 You'll have to wait several minutes for the playbook to complete.
 
