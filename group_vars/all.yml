@@ -1,0 +1,2 @@
+working_dir: 3blades/deployment
+pull_images_always: "{{ force_pull_images | default('no')}}" 

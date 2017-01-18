@@ -1,0 +1,23 @@
+- name: create data volume container
+  docker_container: 
+    name: postgresql-data
+    image: busybox
+    volumes:
+      - /var/lib/postgresql/data
+    state: present
+
+# launch the full stack in background (-d)
+- name: launch the full-stack
+  command: docker-compose -f '{{ working_dir }}'/docker-compose.yml up -d
+
+- name: "Wait for services to start"
+  pause: seconds=25
+
+- name: "Check the status of hubserver UI"
+  command: curl localhost
+  register: curl_result
+
+- name: "Ensure that proper data is present in stdout"
+  assert:
+    that:
+      - "'3Blades-logo.png' in curl_result.stdout"

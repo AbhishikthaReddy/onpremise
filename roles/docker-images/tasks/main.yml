@@ -1,0 +1,69 @@
+- name: pull the hubserver image
+  docker_image:
+    name: 3blades/hubserver:latest
+    state: present
+    force: "{{ pull_images_always }}"
+    timeout: 3600 
+- name: pull the openresty image (the on-premise version)
+  docker_image:
+    name: 3blades/openresty:on-premise
+    state: present
+    force: "{{ pull_images_always }}"
+- name: pull the notifications-server image
+  docker_image:
+    name: 3blades/notifications-server:latest
+    state: present
+    force: "{{ pull_images_always }}"
+- name: pull the logspout image
+  docker_image:
+    name: 3blades/logspout:latest
+    state: present
+    force: "{{ pull_images_always }}"
+- name: pull the docker-stats image
+  docker_image:
+    name: 3blades/docker-stats:latest
+    state: present
+    force: "{{ pull_images_always }}"
+
+- name: pull jupyterlab image
+  docker_image:
+    name: 3blades/jupyterlab:latest
+    state: present
+    force: "{{ pull_images_always }}"
+
+- name: pull scipy-notebook image
+  docker_image:
+    name: 3blades/scipy-notebook:latest
+    state: present
+    force: "{{ pull_images_always }}"
+
+- name: pull job-py3 image
+  docker_image:
+    name: 3blades/job-py3:latest
+    state: present
+    force: "{{ pull_images_always }}"
+    
+- name: pull model-py3 image
+  docker_image:
+    name: 3blades/model-py3:latest
+    state: present
+    force: "{{ pull_images_always }}"
+
+# pull the data-sources images
+- name: pull mongo image
+  docker_image:
+    name: mongo
+    state: present
+    
+- name: pull cassandra image
+  docker_image:
+    name: cassandra
+    state: present
+- name: pull mysql image
+  docker_image:
+    name: mysql
+    state: present
+- name: pull postgres image
+  docker_image:
+    name: postgres
+    state: present

@@ -1,0 +1,69 @@
+# Ansible requires python2, which is not installed by default on Ubuntu Xenial
+- name: Install python for Ansible
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  changed_when: False
+- setup: # aka gather_facts
+
+- name: install apt packages
+  apt: name={{ item }} update-cache=yes state=present cache_valid_time=3600
+  with_items: 
+    - python-dev
+    - python-setuptools    
+
+- name: Install pip
+  easy_install: 
+      name=pip
+
+- name: upgrade pip
+  command: pip install --upgrade pip
+
+- name: Add docker apt repo
+  apt_repository:
+      repo='deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main'
+      state=present
+
+- name: Import the Docker repository key
+  apt_key:
+      url=https://apt.dockerproject.org/gpg
+      state=present
+      id=2C52609D
+
+- name: Install Docker
+  apt:
+      name=docker-engine
+      update_cache=yes
+
+- name: install docker-compose
+  pip: name=docker-compose
+
+- name: Create a docker group
+  group: 
+      name=docker 
+      state=present
+
+- name: Add current user to docker group
+  user: 
+    name={{ lookup('env', 'USER') }} 
+    group=docker 
+    state=present 
+  notify: 
+    - restart docker
+- name: increase virtual memory to avoid elastic problems when run on a small machine
+  command: sysctl -w vm.max_map_count=262144
+
+- name: read the docker.service file
+  shell: cat /lib/systemd/system/docker.service
+  register: docker_service_content
+
+- name: enable docker to listen on tcp by modifying the docker.service file (only if it was not modified)
+  when: docker_service_content.stdout.find('tcp://0.0.0.0:2375') == -1
+  replace: 
+    dest: /lib/systemd/system/docker.service
+    replace: ' fd:// -H tcp://0.0.0.0:2375'
+    regexp: '(\s+)fd:\/\/'
+
+- name: flush changes
+  command: systemctl daemon-reload
+
+- name: restart docker service
+  command: systemctl restart docker

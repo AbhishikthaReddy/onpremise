@@ -1,0 +1,136 @@
+# create the env-types by default
+- name: create jupyterlab env-type
+  docker_container:
+    name: env-type-lab
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
+      VALUES ('JupyterLab', '3blades/jupyterlab', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{workspace.hashid}\" -port=8888 -resource=\"/home/work\" jupyter lab --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"', 'JupyterLab (beta)', '/home/work', '/home/work', 8888, now(), 'w');"
+     -h 3blades_db -U postgres
+- name: create model-py3 env-type
+  docker_container:
+    name: env-type-model
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
+      VALUES ('model-py3', '3blades/model-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -hashid=\"{model.hashid}\" -hubserver_secret_key=\"{{app_secret_key}}\"', 'Python 3', '/resources', '/resources', 8000, now(), 'm');"
+     -h 3blades_db -U postgres
+
+- name: create jobs-py3 env-type
+  docker_container:
+    name: env-type-jobs
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
+      VALUES ('jobs-py3', '3blades/job-py3', '/server -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={job.hashid} python3 -c \"from {job.script:.{script_name_len}} import {job.method}; {job.method}()\"' , 'Python 3', '/resources', '/resources', 8000, now(), 'j');"
+     -h 3blades_db -U postgres
+
+- name: create scipy-notebook env-type
+  docker_container:
+    name: env-type-scipy
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
+      VALUES ('scipy', '3blades/scipy-notebook', '/serve -db=\"postgresql://postgres:@{{local_ip}}:5432/postgres?sslmode=disable\" -redis=\"redis://{{local_ip}}:6379/0\" -resource=\"/resources\" -hashid={workspace.hashid} -port=8888 -resource=\"/home/work\" jupyter notebook --no-browser --NotebookApp.base_url=\"/container/{workspace.hashid}\"' , 'Python Data Science Notebook with Jupyter', '/resources', '/resources', 8888, now(),'w');"
+     -h 3blades_db -U postgres
+
+- name: create a resources item with 512 of memory
+  docker_container:
+    name: env-resources
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_resources (name, cpu, memory, description, created_at, active)
+      VALUES ('Small', 1024, 512, '1 CPU with 512 Mb of RAM', now(), true);"
+     -h 3blades_db -U postgres
+
+- name: create a resources item with 1024 of memory
+  docker_container:
+    name: env-resources
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_resources (name, cpu, memory, description, created_at, active)
+      VALUES ('Medium', 1024, 1024, '1 CPU with 1024 Mb of RAM', now(), true);"
+     -h 3blades_db -U postgres
+# insert the data-sources in the env-types table
+- name: create cassandra
+  docker_container:
+    name: env-type
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
+      VALUES ('cassandra', 'cassandra', '' , 'Cassandra', '', '/var/lib/cassandra', 9042, now(),'d');"
+     -h 3blades_db -U postgres
+- name: create MongoDB
+  docker_container:
+    name: env-type
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type)
+      VALUES ('mongo', 'mongo', '' , 'MongoDB', '', '/data/db', 27017, now(),'d');"
+     -h 3blades_db -U postgres
+- name: create mysql env-type
+  docker_container:
+    name: env-type
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type, env_vars)
+      VALUES ('mysql', 'mysql', '' , 'MySQL', '', '/var/lib/mysql', 3306, now(),'d', 'MYSQL_ALLOW_EMPTY_PASSWORD => yes');"
+     -h 3blades_db -U postgres
+- name: create postgres
+  docker_container:
+    name: env-type
+    image: postgres
+    networks:
+      - name: deployment_threeblades
+        links: 
+          - deployment_db_1:3blades_db
+    
+    cleanup: yes
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type)
+      VALUES ('postgres', 'postgres', '' , 'PostgreSQL', '', '/var/lib/postgresql/data', 5432, now(),'d');"
+     -h 3blades_db -U postgres
