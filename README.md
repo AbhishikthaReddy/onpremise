@@ -1,3 +1,5 @@
+[![slack in](https://slackin-pypmyuhqds.now.sh/badge.svg)](https://slackin-pypmyuhqds.now.sh/)
+
 # 3Blades On-Premise Installation Instructions
 
 ## Table of Contents
