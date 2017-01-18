@@ -52,7 +52,7 @@ You could do all of this with docker-compose. As a matter of fact, the ansible s
 
 1. Test your SSH access into EC2 instance with external ip address:
 
-    `ssh -i key-name ubuntu@[public_ip_address]``
+    `ssh -i key-name ubuntu@[public_ip_address]`
 
     > Both external and internal IP addresses can be obtained from AWS console
 
