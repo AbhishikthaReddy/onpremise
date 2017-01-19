@@ -25,47 +25,51 @@ You could do all of this with docker-compose. As a matter of fact, the ansible s
 
 1. Launch EC2 instance within your AWS account using the these requirements.
 
-  - Ubuntu 16.04 AWS AMI (ami-a9d276c9)
+  - Ubuntu 16.04 AWS AMI
   - t2.Medium (2 CPU and 4 GB RAM)
   - Security group with the following in-bound rules:
-	- 22 and 80
+	- Open inbound ports: 22 and 80
   - SSH key
   - 30 GB of disk space
 
-1. Install ansible on your local computer:
+1. Install `ansible` on your **local** computer:
 
     `pip install ansible`
 
     > It is recommended to install ansible from `virtualenv` environment
 
-    > If installing ansible with Linux (Debian or Ubuntu), using Vagrant (VirtualBox) or other virutal machine you may have to install openssl dependencies: `sudo apt-get install build-essential libssl-dev libffi-dev python-dev`
+    > If installing ansible with Linux (Debian or Ubuntu), using Vagrant (VirtualBox) or other virtual machine distributions you may have to install openssl dependencies: `sudo apt-get install build-essential libssl-dev libffi-dev python-dev`
 
-1. Clone deployment repo:
+1. Clone on-premise repo:
 
-    `git clone https://github.com/3Blades/onpremise.git`
+    `git clone https://github.com/3blades/onpremise.git`
 
-1. Change directory into project folder:
+1. Change directory into repo folder:
 
     `cd onpremise`
 
-1. Copy / Paste SSH key into folder and add permissions to read SSH file:
+1.  Specify full `path` for SSH key to use with ansible script. You may need to add read permissions:
 
-    `chmod 600 SSH_KEY`
+    `chmod 600 $SSH_KEY` where `SSH_KEY` represents the full path to your PEM key.
+
+    > In this case we are copying the private key encoded in base64. In AWS's case,
+    when launching an EC2 instance you must designate what public/private key pair is used
+    to configure remote access.
 
 1. Test your SSH access into EC2 instance with external ip address:
 
-    `ssh -i key-name ubuntu@[public_ip_address]`
+    `ssh -i key-name ubuntu@[external_facing_ip_address]`
 
-    > Both external and internal IP addresses can be obtained from AWS console
+    > Both external and internal IP addresses can be obtained from AWS console.
 
-1. Edit the inventory file called `hosts` by changing your EC2 public IP address: 
-    
-    `hubserver ansible_ssh_host=[public_ip_address] ansible_ssh_port=22`
+1. Edit the inventory file named `hosts` by changing your EC2 external facing IP address:
+
+    `hubserver ansible_ssh_host=[external_facing_ip_address] ansible_ssh_port=22`
 
     > Change the ssh port if it is different in your case
 
-1. Edit the file `ansible.cfg` to change the `private_key_file` value and use your SSH-key file name. The file should look like this:
-  
+1. Edit the file `ansible.cfg` to change the `private_key_file` value and use your SSH-key file name. The file should look something like so:
+
     ```
     [defaults]
     hostfile = hosts
@@ -74,7 +78,7 @@ You could do all of this with docker-compose. As a matter of fact, the ansible s
     host_key_checking = False
     roles_path = roles
     ```
-    
+
 ## Installation
 
 1. From the current folder, run ansible playbook:
@@ -88,10 +92,9 @@ You could do all of this with docker-compose. As a matter of fact, the ansible s
 Please, consider this:
 
 - `APP_SECRET_KEY` should be a securely generated random string.
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME` and `SMTP_PASSWORD` values are used to authenticate to SMTP service. Them should be replaced with your respective SMTP configurations and are necessary to enable system notifications, including password reset emails.
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME` and `SMTP_PASSWORD` values are used to authenticate to SMTP service. They should be replaced with your respective SMTP configurations and are necessary to enable system notifications, including password reset emails.
 
-  > The `force_pull_images` argument is only useful if there is a new version of our images and we want to update them. In that case we have to run
-  > the ansible-plabook as before
+  > The `force_pull_images` argument is only useful if there is a new version of our images and would like to force updates. In that case we have to run the ansible-plabook as before.
 
 You'll have to wait several minutes for the playbook to complete.
 
