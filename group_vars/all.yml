@@ -1,2 +1,43 @@
 working_dir: 3blades/deployment
 pull_images_always: "{{ force_pull_images | default('no')}}" 
+cassandra_usage: >
+          python => \"from cassandra.cluster import Cluster
+
+          cluster = Cluster([''{server.name}''])
+
+          session = cluster.connect()
+
+          rows = session.execute(''SELECT cluster_name, listen_address FROM system.local;'')
+
+          for row in rows:
+              print(row)\"
+mongo_usage: >
+          python => \"from pymongo import MongoClient
+
+          client = MongoClient(''{server.name}'', 27017)
+
+          db = client.test_database
+
+          collection = db.test_collection
+
+          test_id = collection.insert_one({''test'': ''test''})
+
+          print(test_id)\", bash => \"mongo {server.name}\"
+mysql_usage: >
+          python => \"import MySQLdb
+
+          db = MySQLdb.connect(host=''{server.name}'')
+
+          cursor = db.cursor()
+
+          cursor.execute(''SELECT 1'')\", bash => \"mysql -h {server.name}\"
+postgres_usage: >
+          python => \"import psycopg2
+
+          conn = psycopg2.connect(''dbname=postgres user=postgres host={server.name}'')
+
+          cur = conn.cursor()
+
+          cur.execute(''SELECT 1'')
+
+          cur.fetchone()\", bash => \"psql -h {server.name} -U postgres\"

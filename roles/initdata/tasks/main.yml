@@ -92,9 +92,10 @@
           - deployment_db_1:3blades_db
     
     cleanup: yes
-    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type)
-      VALUES ('cassandra', 'cassandra', '' , 'Cassandra', '', '/var/lib/cassandra', 9042, now(),'d');"
-     -h 3blades_db -U postgres
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at, type, usage)
+            VALUES ('cassandra', 'cassandra', '' , 'Cassandra', '', '/var/lib/cassandra', 9042, now(),'d', '{{cassandra_usage}}');" 
+            -h 3blades_db -U postgres
+
 - name: create MongoDB
   docker_container:
     name: env-type
@@ -105,9 +106,10 @@
           - deployment_db_1:3blades_db
     
     cleanup: yes
-    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type)
-      VALUES ('mongo', 'mongo', '' , 'MongoDB', '', '/data/db', 27017, now(),'d');"
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type, usage)
+      VALUES ('mongo', 'mongo', '' , 'MongoDB', '', '/data/db', 27017, now(),'d', '{{mongo_usage}}');" 
      -h 3blades_db -U postgres
+
 - name: create mysql env-type
   docker_container:
     name: env-type
@@ -118,8 +120,8 @@
           - deployment_db_1:3blades_db
     
     cleanup: yes
-    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type, env_vars)
-      VALUES ('mysql', 'mysql', '' , 'MySQL', '', '/var/lib/mysql', 3306, now(),'d', 'MYSQL_ALLOW_EMPTY_PASSWORD => yes');"
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type, env_vars, usage)
+      VALUES ('mysql', 'mysql', '' , 'MySQL', '', '/var/lib/mysql', 3306, now(),'d', 'MYSQL_ALLOW_EMPTY_PASSWORD => yes','{{mysql_usage}}');" 
      -h 3blades_db -U postgres
 - name: create postgres
   docker_container:
@@ -131,6 +133,6 @@
           - deployment_db_1:3blades_db
     
     cleanup: yes
-    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type)
-      VALUES ('postgres', 'postgres', '' , 'PostgreSQL', '', '/var/lib/postgresql/data', 5432, now(),'d');"
+    command: psql -c "INSERT INTO public.environment_type (name, image_name, cmd, description, work_dir, container_path, container_port, created_at,type, usage)
+      VALUES ('postgres', 'postgres', '' , 'PostgreSQL', '', '/var/lib/postgresql/data', 5432, now(),'d', '{{postgres_usage}}');" 
      -h 3blades_db -U postgres
